@@ -1,0 +1,84 @@
+{
+    "nodes": [
+      {
+        "parameters": {},
+        "type": "n8n-nodes-base.manualTrigger",
+        "typeVersion": 1,
+        "position": [
+          768,
+          160
+        ],
+        "id": "2166b3ea-5ec3-4d96-a136-a62c02d739bf",
+        "name": "When clicking ‘Execute workflow’"
+      },
+      {
+        "parameters": {
+          "assignments": {
+            "assignments": [
+              {
+                "id": "da8de9c6-1c8d-4f68-a7a4-0cc04fd2a1b6",
+                "name": "nombre",
+                "value": "Juan",
+                "type": "string"
+              },
+              {
+                "id": "d2aefdd0-de7c-49ba-983e-0cc7242cc32b",
+                "name": "ciudad",
+                "value": "Bucaramanga",
+                "type": "string"
+              }
+            ]
+          },
+          "options": {}
+        },
+        "type": "n8n-nodes-base.set",
+        "typeVersion": 3.4,
+        "position": [
+          1024,
+          160
+        ],
+        "id": "4dfcc1b3-b2cd-4c88-be49-572ff8fe2a28",
+        "name": "Edit Fields"
+      },
+      {
+        "parameters": {},
+        "type": "n8n-nodes-base.noOp",
+        "typeVersion": 1,
+        "position": [
+          1296,
+          160
+        ],
+        "id": "4e30263d-ddfd-4655-a39d-d19128cde2c3",
+        "name": "No Operation, do nothing"
+      }
+    ],
+    "connections": {
+      "When clicking ‘Execute workflow’": {
+        "main": [
+          [
+            {
+              "node": "Edit Fields",
+              "type": "main",
+              "index": 0
+            }
+          ]
+        ]
+      },
+      "Edit Fields": {
+        "main": [
+          [
+            {
+              "node": "No Operation, do nothing",
+              "type": "main",
+              "index": 0
+            }
+          ]
+        ]
+      }
+    },
+    "pinData": {},
+    "meta": {
+      "templateCredsSetupCompleted": true,
+      "instanceId": "e8fa43e9ff3b2d45481591194f99da422557d7548564644772dffe7b5e275411"
+    }
+  }

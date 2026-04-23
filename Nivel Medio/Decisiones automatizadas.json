@@ -1,0 +1,360 @@
+{
+    "nodes": [
+      {
+        "parameters": {
+          "url": "=https://pokeapi.co/api/v2/pokemon/{{ $json.nombre }}",
+          "options": {}
+        },
+        "type": "n8n-nodes-base.httpRequest",
+        "typeVersion": 4.4,
+        "position": [
+          4000,
+          1344
+        ],
+        "id": "a22d0529-f234-4b4a-ad74-f61e530d2b3a",
+        "name": "HTTP Request",
+        "alwaysOutputData": false,
+        "onError": "continueRegularOutput"
+      },
+      {
+        "parameters": {},
+        "type": "n8n-nodes-base.manualTrigger",
+        "typeVersion": 1,
+        "position": [
+          3616,
+          1344
+        ],
+        "id": "c19ffa11-d723-4e4c-b35e-68a307fa589c",
+        "name": "When clicking ‘Execute workflow’"
+      },
+      {
+        "parameters": {
+          "operation": "append",
+          "documentId": {
+            "__rl": true,
+            "value": "1JYIYLWLQjPdwULP4k6a1imWhKE6jF0KXc_OZUtdx9wk",
+            "mode": "list",
+            "cachedResultName": "n8nbst",
+            "cachedResultUrl": "https://docs.google.com/spreadsheets/d/1JYIYLWLQjPdwULP4k6a1imWhKE6jF0KXc_OZUtdx9wk/edit?usp=drivesdk"
+          },
+          "sheetName": {
+            "__rl": true,
+            "value": "gid=0",
+            "mode": "list",
+            "cachedResultName": "Hoja 1",
+            "cachedResultUrl": "https://docs.google.com/spreadsheets/d/1JYIYLWLQjPdwULP4k6a1imWhKE6jF0KXc_OZUtdx9wk/edit#gid=0"
+          },
+          "columns": {
+            "mappingMode": "defineBelow",
+            "value": {
+              "Mas de 500BST": "={{ $json.name }}"
+            },
+            "matchingColumns": [
+              "Menos de 500BST"
+            ],
+            "schema": [
+              {
+                "id": "Menos de 500BST",
+                "displayName": "Menos de 500BST",
+                "required": false,
+                "defaultMatch": false,
+                "display": true,
+                "type": "string",
+                "canBeUsedToMatch": true,
+                "removed": true
+              },
+              {
+                "id": "Mas de 500BST",
+                "displayName": "Mas de 500BST",
+                "required": false,
+                "defaultMatch": false,
+                "display": true,
+                "type": "string",
+                "canBeUsedToMatch": true,
+                "removed": false
+              }
+            ],
+            "attemptToConvertTypes": false,
+            "convertFieldsToString": false
+          },
+          "options": {}
+        },
+        "type": "n8n-nodes-base.googleSheets",
+        "typeVersion": 4.7,
+        "position": [
+          4576,
+          928
+        ],
+        "id": "2b00a517-6a80-4539-bc39-f9be0f198223",
+        "name": "Append row in sheet",
+        "credentials": {
+          "googleSheetsOAuth2Api": {
+            "id": "NVcVADfOrLlS3GdF",
+            "name": "Google Sheets OAuth2 API"
+          }
+        }
+      },
+      {
+        "parameters": {
+          "assignments": {
+            "assignments": [
+              {
+                "id": "069f47fd-e6ad-434a-bc26-b8b7579129f9",
+                "name": "nombre",
+                "value": "blastoise",
+                "type": "string"
+              }
+            ]
+          },
+          "options": {}
+        },
+        "type": "n8n-nodes-base.set",
+        "typeVersion": 3.4,
+        "position": [
+          3808,
+          1344
+        ],
+        "id": "559a8072-5b6d-481d-a2ea-ce0400c071ec",
+        "name": "Edit Fields"
+      },
+      {
+        "parameters": {
+          "content": "Este flujo consulta un Pokémon específico, calcula su Base Stat Total (BST) y lo clasifica automáticamente en una hoja de cálculo según si supera o no los 500 puntos."
+        },
+        "type": "n8n-nodes-base.stickyNote",
+        "typeVersion": 1,
+        "position": [
+          3744,
+          1504
+        ],
+        "id": "1ef72a3d-ef7f-4153-901b-1534185c8def",
+        "name": "Sticky Note"
+      },
+      {
+        "parameters": {
+          "conditions": {
+            "options": {
+              "caseSensitive": true,
+              "leftValue": "",
+              "typeValidation": "strict",
+              "version": 3
+            },
+            "conditions": [
+              {
+                "id": "ccc0f937-d52a-4bdc-8ed0-e2d9081d0a7c",
+                "leftValue": "={{ $json.name }}",
+                "rightValue": "",
+                "operator": {
+                  "type": "string",
+                  "operation": "exists",
+                  "singleValue": true
+                }
+              }
+            ],
+            "combinator": "and"
+          },
+          "options": {}
+        },
+        "type": "n8n-nodes-base.if",
+        "typeVersion": 2.3,
+        "position": [
+          4176,
+          1344
+        ],
+        "id": "af276f77-bfb9-4bb7-af87-877b7ce5a80b",
+        "name": "If"
+      },
+      {
+        "parameters": {
+          "operation": "append",
+          "documentId": {
+            "__rl": true,
+            "value": "1JYIYLWLQjPdwULP4k6a1imWhKE6jF0KXc_OZUtdx9wk",
+            "mode": "list",
+            "cachedResultName": "n8nbst",
+            "cachedResultUrl": "https://docs.google.com/spreadsheets/d/1JYIYLWLQjPdwULP4k6a1imWhKE6jF0KXc_OZUtdx9wk/edit?usp=drivesdk"
+          },
+          "sheetName": {
+            "__rl": true,
+            "value": "gid=0",
+            "mode": "list",
+            "cachedResultName": "Hoja 1",
+            "cachedResultUrl": "https://docs.google.com/spreadsheets/d/1JYIYLWLQjPdwULP4k6a1imWhKE6jF0KXc_OZUtdx9wk/edit#gid=0"
+          },
+          "columns": {
+            "mappingMode": "defineBelow",
+            "value": {
+              "Menos de 500BST": "={{ $json.name }}"
+            },
+            "matchingColumns": [
+              "Menos de 500BST"
+            ],
+            "schema": [
+              {
+                "id": "Menos de 500BST",
+                "displayName": "Menos de 500BST",
+                "required": false,
+                "defaultMatch": false,
+                "display": true,
+                "type": "string",
+                "canBeUsedToMatch": true,
+                "removed": false
+              },
+              {
+                "id": "Mas de 500BST",
+                "displayName": "Mas de 500BST",
+                "required": false,
+                "defaultMatch": false,
+                "display": true,
+                "type": "string",
+                "canBeUsedToMatch": true,
+                "removed": true
+              }
+            ],
+            "attemptToConvertTypes": false,
+            "convertFieldsToString": false
+          },
+          "options": {}
+        },
+        "type": "n8n-nodes-base.googleSheets",
+        "typeVersion": 4.7,
+        "position": [
+          4576,
+          1184
+        ],
+        "id": "4b1f8a28-500c-4261-bd63-94541e8415f1",
+        "name": "Append row in sheet1",
+        "credentials": {
+          "googleSheetsOAuth2Api": {
+            "id": "NVcVADfOrLlS3GdF",
+            "name": "Google Sheets OAuth2 API"
+          }
+        }
+      },
+      {
+        "parameters": {
+          "conditions": {
+            "options": {
+              "caseSensitive": true,
+              "leftValue": "",
+              "typeValidation": "strict",
+              "version": 3
+            },
+            "conditions": [
+              {
+                "id": "b1001d72-e162-4832-8836-3a83587adc0c",
+                "leftValue": "={{ \n  $json.stats[0].base_stat +\n  $json.stats[1].base_stat +\n  $json.stats[2].base_stat +\n  $json.stats[3].base_stat +\n  $json.stats[4].base_stat +\n  $json.stats[5].base_stat\n}}",
+                "rightValue": 500,
+                "operator": {
+                  "type": "number",
+                  "operation": "gt"
+                }
+              }
+            ],
+            "combinator": "and"
+          },
+          "options": {}
+        },
+        "type": "n8n-nodes-base.if",
+        "typeVersion": 2.3,
+        "position": [
+          4336,
+          1168
+        ],
+        "id": "414d54fe-9837-45c6-9cd4-2e743beb8543",
+        "name": "If1"
+      },
+      {
+        "parameters": {},
+        "type": "n8n-nodes-base.noOp",
+        "typeVersion": 1,
+        "position": [
+          4336,
+          1488
+        ],
+        "id": "3a74c8e5-d1a6-4654-b560-75fe9270a7c3",
+        "name": "No Operation, do nothing"
+      }
+    ],
+    "connections": {
+      "HTTP Request": {
+        "main": [
+          [
+            {
+              "node": "If",
+              "type": "main",
+              "index": 0
+            }
+          ]
+        ]
+      },
+      "When clicking ‘Execute workflow’": {
+        "main": [
+          [
+            {
+              "node": "Edit Fields",
+              "type": "main",
+              "index": 0
+            }
+          ]
+        ]
+      },
+      "Edit Fields": {
+        "main": [
+          [
+            {
+              "node": "HTTP Request",
+              "type": "main",
+              "index": 0
+            }
+          ]
+        ]
+      },
+      "If": {
+        "main": [
+          [
+            {
+              "node": "If1",
+              "type": "main",
+              "index": 0
+            }
+          ],
+          [
+            {
+              "node": "No Operation, do nothing",
+              "type": "main",
+              "index": 0
+            }
+          ]
+        ]
+      },
+      "Append row in sheet1": {
+        "main": [
+          []
+        ]
+      },
+      "If1": {
+        "main": [
+          [
+            {
+              "node": "Append row in sheet",
+              "type": "main",
+              "index": 0
+            }
+          ],
+          [
+            {
+              "node": "Append row in sheet1",
+              "type": "main",
+              "index": 0
+            }
+          ]
+        ]
+      }
+    },
+    "pinData": {},
+    "meta": {
+      "templateCredsSetupCompleted": true,
+      "instanceId": "e8fa43e9ff3b2d45481591194f99da422557d7548564644772dffe7b5e275411"
+    }
+  }

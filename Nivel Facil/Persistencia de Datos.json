@@ -1,0 +1,184 @@
+{
+    "nodes": [
+      {
+        "parameters": {
+          "url": "=https://pokeapi.co/api/v2/pokemon/{{ $json.nombre }}",
+          "options": {}
+        },
+        "type": "n8n-nodes-base.httpRequest",
+        "typeVersion": 4.4,
+        "position": [
+          1824,
+          304
+        ],
+        "id": "57bf246f-5807-465c-b3f0-06408e3688ff",
+        "name": "HTTP Request"
+      },
+      {
+        "parameters": {},
+        "type": "n8n-nodes-base.manualTrigger",
+        "typeVersion": 1,
+        "position": [
+          1440,
+          304
+        ],
+        "id": "b86a4433-7b4d-4345-9121-e2f6f133d2fc",
+        "name": "When clicking ‘Execute workflow’"
+      },
+      {
+        "parameters": {
+          "operation": "append",
+          "documentId": {
+            "__rl": true,
+            "value": "1RfZkDpP-q8_KnmEKymnvjA-4SymH7va0IHFWN5Upr1Y",
+            "mode": "list",
+            "cachedResultName": "n8n8n8n8n8n8n",
+            "cachedResultUrl": "https://docs.google.com/spreadsheets/d/1RfZkDpP-q8_KnmEKymnvjA-4SymH7va0IHFWN5Upr1Y/edit?usp=drivesdk"
+          },
+          "sheetName": {
+            "__rl": true,
+            "value": "gid=0",
+            "mode": "list",
+            "cachedResultName": "Hoja 1",
+            "cachedResultUrl": "https://docs.google.com/spreadsheets/d/1RfZkDpP-q8_KnmEKymnvjA-4SymH7va0IHFWN5Upr1Y/edit#gid=0"
+          },
+          "columns": {
+            "mappingMode": "defineBelow",
+            "value": {
+              "nombre": "={{ $json.name }}",
+              "tipo 1": "={{ $json.types[0].type.name }}",
+              "tipo 2": "={{ $json.types[1].type.name }}"
+            },
+            "matchingColumns": [
+              "id"
+            ],
+            "schema": [
+              {
+                "id": "nombre",
+                "displayName": "nombre",
+                "required": false,
+                "defaultMatch": false,
+                "display": true,
+                "type": "string",
+                "canBeUsedToMatch": true,
+                "removed": false
+              },
+              {
+                "id": "tipo 1",
+                "displayName": "tipo 1",
+                "required": false,
+                "defaultMatch": false,
+                "display": true,
+                "type": "string",
+                "canBeUsedToMatch": true,
+                "removed": false
+              },
+              {
+                "id": "tipo 2",
+                "displayName": "tipo 2",
+                "required": false,
+                "defaultMatch": false,
+                "display": true,
+                "type": "string",
+                "canBeUsedToMatch": true,
+                "removed": false
+              }
+            ],
+            "attemptToConvertTypes": false,
+            "convertFieldsToString": false
+          },
+          "options": {}
+        },
+        "type": "n8n-nodes-base.googleSheets",
+        "typeVersion": 4.7,
+        "position": [
+          2016,
+          304
+        ],
+        "id": "e1556679-a58d-4289-aa1c-194a9cfc9d52",
+        "name": "Append row in sheet",
+        "credentials": {
+          "googleSheetsOAuth2Api": {
+            "id": "NVcVADfOrLlS3GdF",
+            "name": "Google Sheets OAuth2 API"
+          }
+        }
+      },
+      {
+        "parameters": {
+          "assignments": {
+            "assignments": [
+              {
+                "id": "069f47fd-e6ad-434a-bc26-b8b7579129f9",
+                "name": "nombre",
+                "value": "POPPLIO",
+                "type": "string"
+              }
+            ]
+          },
+          "options": {}
+        },
+        "type": "n8n-nodes-base.set",
+        "typeVersion": 3.4,
+        "position": [
+          1632,
+          304
+        ],
+        "id": "f546226d-eb02-46c8-ad69-01728a7b6bf9",
+        "name": "Edit Fields"
+      },
+      {
+        "parameters": {
+          "content": "Flujo que toma el nombre de un Pokémon y transfiere el nombre y sus tipos a una tabla de google sheets, para que funcione, se debe poner el nombre de un pokemon existente, si no existe, no se transfiere nada"
+        },
+        "type": "n8n-nodes-base.stickyNote",
+        "typeVersion": 1,
+        "position": [
+          1568,
+          464
+        ],
+        "id": "219e2679-775f-4618-9102-a0d5288cc516",
+        "name": "Sticky Note"
+      }
+    ],
+    "connections": {
+      "HTTP Request": {
+        "main": [
+          [
+            {
+              "node": "Append row in sheet",
+              "type": "main",
+              "index": 0
+            }
+          ]
+        ]
+      },
+      "When clicking ‘Execute workflow’": {
+        "main": [
+          [
+            {
+              "node": "Edit Fields",
+              "type": "main",
+              "index": 0
+            }
+          ]
+        ]
+      },
+      "Edit Fields": {
+        "main": [
+          [
+            {
+              "node": "HTTP Request",
+              "type": "main",
+              "index": 0
+            }
+          ]
+        ]
+      }
+    },
+    "pinData": {},
+    "meta": {
+      "templateCredsSetupCompleted": true,
+      "instanceId": "e8fa43e9ff3b2d45481591194f99da422557d7548564644772dffe7b5e275411"
+    }
+  }

@@ -1,0 +1,189 @@
+{
+    "nodes": [
+      {
+        "parameters": {},
+        "type": "n8n-nodes-base.manualTrigger",
+        "typeVersion": 1,
+        "position": [
+          1984,
+          720
+        ],
+        "id": "ec7dc039-1c58-4649-a690-69c9d8b1ab2f",
+        "name": "When clicking ‘Execute workflow’"
+      },
+      {
+        "parameters": {
+          "url": "https://rickandmortyapi.com/api/character",
+          "sendQuery": true,
+          "queryParameters": {
+            "parameters": [
+              {}
+            ]
+          },
+          "options": {}
+        },
+        "type": "n8n-nodes-base.httpRequest",
+        "typeVersion": 4.4,
+        "position": [
+          2176,
+          720
+        ],
+        "id": "4895e097-72a7-4f68-9cfb-f9a7f3d85347",
+        "name": "HTTP Request"
+      },
+      {
+        "parameters": {
+          "assignments": {
+            "assignments": [
+              {
+                "id": "9bf9f988-a971-41d1-a2be-8bc5e2eb7984",
+                "name": "Aliens",
+                "value": "={{ $json.Aliens }}",
+                "type": "array"
+              }
+            ]
+          },
+          "options": {}
+        },
+        "type": "n8n-nodes-base.set",
+        "typeVersion": 3.4,
+        "position": [
+          2976,
+          720
+        ],
+        "id": "211b3c8a-784a-4046-b133-c514f76a08ee",
+        "name": "Edit Fields"
+      },
+      {
+        "parameters": {
+          "conditions": {
+            "options": {
+              "caseSensitive": true,
+              "leftValue": "",
+              "typeValidation": "strict",
+              "version": 3
+            },
+            "conditions": [
+              {
+                "id": "10c7e038-89b5-4f0b-89e5-48c0f70422de",
+                "leftValue": "={{ $json.species }}",
+                "rightValue": "Alien",
+                "operator": {
+                  "type": "string",
+                  "operation": "equals"
+                }
+              }
+            ],
+            "combinator": "and"
+          },
+          "options": {}
+        },
+        "type": "n8n-nodes-base.filter",
+        "typeVersion": 2.3,
+        "position": [
+          2576,
+          720
+        ],
+        "id": "4a2934e7-6d2b-481f-b00c-a8f53847b5ac",
+        "name": "Filter"
+      },
+      {
+        "parameters": {
+          "fieldToSplitOut": "results",
+          "options": {}
+        },
+        "type": "n8n-nodes-base.splitOut",
+        "typeVersion": 1,
+        "position": [
+          2368,
+          720
+        ],
+        "id": "2186a8ce-9fad-4fb1-81a9-624fdbd7c334",
+        "name": "Split Out"
+      },
+      {
+        "parameters": {
+          "fieldsToAggregate": {
+            "fieldToAggregate": [
+              {
+                "fieldToAggregate": "name",
+                "renameField": true,
+                "outputFieldName": "Aliens"
+              }
+            ]
+          },
+          "options": {}
+        },
+        "type": "n8n-nodes-base.aggregate",
+        "typeVersion": 1,
+        "position": [
+          2800,
+          720
+        ],
+        "id": "3f47b8cf-3bbb-45c1-a433-a4b4a4e14d6c",
+        "name": "Aggregate"
+      }
+    ],
+    "connections": {
+      "When clicking ‘Execute workflow’": {
+        "main": [
+          [
+            {
+              "node": "HTTP Request",
+              "type": "main",
+              "index": 0
+            }
+          ]
+        ]
+      },
+      "HTTP Request": {
+        "main": [
+          [
+            {
+              "node": "Split Out",
+              "type": "main",
+              "index": 0
+            }
+          ]
+        ]
+      },
+      "Filter": {
+        "main": [
+          [
+            {
+              "node": "Aggregate",
+              "type": "main",
+              "index": 0
+            }
+          ]
+        ]
+      },
+      "Split Out": {
+        "main": [
+          [
+            {
+              "node": "Filter",
+              "type": "main",
+              "index": 0
+            }
+          ]
+        ]
+      },
+      "Aggregate": {
+        "main": [
+          [
+            {
+              "node": "Edit Fields",
+              "type": "main",
+              "index": 0
+            }
+          ]
+        ]
+      }
+    },
+    "pinData": {},
+    "meta": {
+      "templateCredsSetupCompleted": true,
+      "instanceId": "e8fa43e9ff3b2d45481591194f99da422557d7548564644772dffe7b5e275411"
+    }
+  }

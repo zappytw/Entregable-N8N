@@ -1,0 +1,249 @@
+{
+    "nodes": [
+      {
+        "parameters": {
+          "url": "=https://pokeapi.co/api/v2/pokemon/{{ $json.nombre }}",
+          "options": {}
+        },
+        "type": "n8n-nodes-base.httpRequest",
+        "typeVersion": 4.4,
+        "position": [
+          4784,
+          1040
+        ],
+        "id": "f59a384c-21b7-43a1-934f-52997d4818ed",
+        "name": "HTTP Request",
+        "alwaysOutputData": false,
+        "onError": "continueRegularOutput"
+      },
+      {
+        "parameters": {},
+        "type": "n8n-nodes-base.manualTrigger",
+        "typeVersion": 1,
+        "position": [
+          4400,
+          1040
+        ],
+        "id": "954ec97f-445a-4ee9-a7bc-75a61e64b6e7",
+        "name": "When clicking ‘Execute workflow’"
+      },
+      {
+        "parameters": {
+          "operation": "append",
+          "documentId": {
+            "__rl": true,
+            "value": "1RfZkDpP-q8_KnmEKymnvjA-4SymH7va0IHFWN5Upr1Y",
+            "mode": "list",
+            "cachedResultName": "n8n8n8n8n8n8n",
+            "cachedResultUrl": "https://docs.google.com/spreadsheets/d/1RfZkDpP-q8_KnmEKymnvjA-4SymH7va0IHFWN5Upr1Y/edit?usp=drivesdk"
+          },
+          "sheetName": {
+            "__rl": true,
+            "value": "gid=0",
+            "mode": "list",
+            "cachedResultName": "Hoja 1",
+            "cachedResultUrl": "https://docs.google.com/spreadsheets/d/1RfZkDpP-q8_KnmEKymnvjA-4SymH7va0IHFWN5Upr1Y/edit#gid=0"
+          },
+          "columns": {
+            "mappingMode": "defineBelow",
+            "value": {
+              "nombre": "={{ $json.name }}",
+              "tipo 1": "={{ $json.types[0].type.name }}",
+              "tipo 2": "={{ $json.types[1].type.name }}"
+            },
+            "matchingColumns": [
+              "id"
+            ],
+            "schema": [
+              {
+                "id": "nombre",
+                "displayName": "nombre",
+                "required": false,
+                "defaultMatch": false,
+                "display": true,
+                "type": "string",
+                "canBeUsedToMatch": true,
+                "removed": false
+              },
+              {
+                "id": "tipo 1",
+                "displayName": "tipo 1",
+                "required": false,
+                "defaultMatch": false,
+                "display": true,
+                "type": "string",
+                "canBeUsedToMatch": true,
+                "removed": false
+              },
+              {
+                "id": "tipo 2",
+                "displayName": "tipo 2",
+                "required": false,
+                "defaultMatch": false,
+                "display": true,
+                "type": "string",
+                "canBeUsedToMatch": true,
+                "removed": false
+              }
+            ],
+            "attemptToConvertTypes": false,
+            "convertFieldsToString": false
+          },
+          "options": {}
+        },
+        "type": "n8n-nodes-base.googleSheets",
+        "typeVersion": 4.7,
+        "position": [
+          5216,
+          880
+        ],
+        "id": "c3695181-9e24-43b5-8328-ca4bdf852db0",
+        "name": "Append row in sheet",
+        "credentials": {
+          "googleSheetsOAuth2Api": {
+            "id": "NVcVADfOrLlS3GdF",
+            "name": "Google Sheets OAuth2 API"
+          }
+        }
+      },
+      {
+        "parameters": {
+          "assignments": {
+            "assignments": [
+              {
+                "id": "069f47fd-e6ad-434a-bc26-b8b7579129f9",
+                "name": "nombre",
+                "value": "asdagf",
+                "type": "string"
+              }
+            ]
+          },
+          "options": {}
+        },
+        "type": "n8n-nodes-base.set",
+        "typeVersion": 3.4,
+        "position": [
+          4592,
+          1040
+        ],
+        "id": "759d935d-4fef-4cb4-8e51-33814feb93f3",
+        "name": "Edit Fields"
+      },
+      {
+        "parameters": {
+          "content": "Flujo que toma el nombre de un Pokémon y transfiere el nombre y sus tipos a una tabla de google sheets, para que funcione, se debe poner el nombre de un pokemon existente, si no existe, no se transfiere nada a la tabla"
+        },
+        "type": "n8n-nodes-base.stickyNote",
+        "typeVersion": 1,
+        "position": [
+          4528,
+          1200
+        ],
+        "id": "0a2a6387-a1ae-4747-b2ab-76a13827d9ce",
+        "name": "Sticky Note"
+      },
+      {
+        "parameters": {
+          "conditions": {
+            "options": {
+              "caseSensitive": true,
+              "leftValue": "",
+              "typeValidation": "strict",
+              "version": 3
+            },
+            "conditions": [
+              {
+                "id": "ccc0f937-d52a-4bdc-8ed0-e2d9081d0a7c",
+                "leftValue": "={{ $json.name }}",
+                "rightValue": "",
+                "operator": {
+                  "type": "string",
+                  "operation": "exists",
+                  "singleValue": true
+                }
+              }
+            ],
+            "combinator": "and"
+          },
+          "options": {}
+        },
+        "type": "n8n-nodes-base.if",
+        "typeVersion": 2.3,
+        "position": [
+          4960,
+          1040
+        ],
+        "id": "cf63a130-0794-4d3a-a1b0-43d87592eec6",
+        "name": "If"
+      },
+      {
+        "parameters": {},
+        "type": "n8n-nodes-base.noOp",
+        "typeVersion": 1,
+        "position": [
+          5232,
+          1136
+        ],
+        "id": "64def937-2438-446d-bc79-43fb7b3ae9d4",
+        "name": "No Operation, do nothing"
+      }
+    ],
+    "connections": {
+      "HTTP Request": {
+        "main": [
+          [
+            {
+              "node": "If",
+              "type": "main",
+              "index": 0
+            }
+          ]
+        ]
+      },
+      "When clicking ‘Execute workflow’": {
+        "main": [
+          [
+            {
+              "node": "Edit Fields",
+              "type": "main",
+              "index": 0
+            }
+          ]
+        ]
+      },
+      "Edit Fields": {
+        "main": [
+          [
+            {
+              "node": "HTTP Request",
+              "type": "main",
+              "index": 0
+            }
+          ]
+        ]
+      },
+      "If": {
+        "main": [
+          [
+            {
+              "node": "Append row in sheet",
+              "type": "main",
+              "index": 0
+            }
+          ],
+          [
+            {
+              "node": "No Operation, do nothing",
+              "type": "main",
+              "index": 0
+            }
+          ]
+        ]
+      }
+    },
+    "pinData": {},
+    "meta": {
+      "templateCredsSetupCompleted": true,
+      "instanceId": "e8fa43e9ff3b2d45481591194f99da422557d7548564644772dffe7b5e275411"
+    }
+  }

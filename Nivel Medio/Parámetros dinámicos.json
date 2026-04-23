@@ -1,0 +1,125 @@
+{
+    "nodes": [
+      {
+        "parameters": {
+          "url": "=https://rickandmortyapi.com/api/character",
+          "sendQuery": true,
+          "queryParameters": {
+            "parameters": [
+              {
+                "name": "name",
+                "value": "={{ $json.nombre }}"
+              }
+            ]
+          },
+          "options": {}
+        },
+        "type": "n8n-nodes-base.httpRequest",
+        "typeVersion": 4.4,
+        "position": [
+          2784,
+          672
+        ],
+        "id": "fd2fb4db-b676-4672-b2ac-53e11a11cf93",
+        "name": "HTTP Request"
+      },
+      {
+        "parameters": {},
+        "type": "n8n-nodes-base.manualTrigger",
+        "typeVersion": 1,
+        "position": [
+          2400,
+          672
+        ],
+        "id": "f64fef1b-ac26-4d2b-b60b-3e135732e070",
+        "name": "When clicking ‘Execute workflow’"
+      },
+      {
+        "parameters": {
+          "assignments": {
+            "assignments": [
+              {
+                "id": "069f47fd-e6ad-434a-bc26-b8b7579129f9",
+                "name": "nombre",
+                "value": "rick",
+                "type": "string"
+              }
+            ]
+          },
+          "options": {}
+        },
+        "type": "n8n-nodes-base.set",
+        "typeVersion": 3.4,
+        "position": [
+          2592,
+          672
+        ],
+        "id": "0d1d094d-d4c8-4924-8532-2e4fb2577ed5",
+        "name": "Edit Fields"
+      },
+      {
+        "parameters": {
+          "content": "Flujo que toma un nombre y devuelve una lista de personajes de rick y morty cuyos nombres coincidan con el nombre dado"
+        },
+        "type": "n8n-nodes-base.stickyNote",
+        "typeVersion": 1,
+        "position": [
+          2528,
+          832
+        ],
+        "id": "a35042dd-0713-466f-adfe-9af3e4483843",
+        "name": "Sticky Note"
+      },
+      {
+        "parameters": {},
+        "type": "n8n-nodes-base.noOp",
+        "typeVersion": 1,
+        "position": [
+          2992,
+          672
+        ],
+        "id": "7ed750f8-f5eb-42d6-af41-c9369bba41ac",
+        "name": "No Operation, do nothing"
+      }
+    ],
+    "connections": {
+      "HTTP Request": {
+        "main": [
+          [
+            {
+              "node": "No Operation, do nothing",
+              "type": "main",
+              "index": 0
+            }
+          ]
+        ]
+      },
+      "When clicking ‘Execute workflow’": {
+        "main": [
+          [
+            {
+              "node": "Edit Fields",
+              "type": "main",
+              "index": 0
+            }
+          ]
+        ]
+      },
+      "Edit Fields": {
+        "main": [
+          [
+            {
+              "node": "HTTP Request",
+              "type": "main",
+              "index": 0
+            }
+          ]
+        ]
+      }
+    },
+    "pinData": {},
+    "meta": {
+      "templateCredsSetupCompleted": true,
+      "instanceId": "e8fa43e9ff3b2d45481591194f99da422557d7548564644772dffe7b5e275411"
+    }
+  }
