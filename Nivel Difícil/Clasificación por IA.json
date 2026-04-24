@@ -1,0 +1,156 @@
+{
+  "nodes": [
+    {
+      "parameters": {},
+      "type": "n8n-nodes-base.manualTrigger",
+      "typeVersion": 1,
+      "position": [
+        0,
+        0
+      ],
+      "id": "ec84c15d-24e0-4991-bc38-5451943018f4",
+      "name": "When clicking ‘Execute workflow’"
+    },
+    {
+      "parameters": {
+        "url": "=https://dummyjson.com/posts/{{ Math.floor(Math.random() * 150) + 1 }}",
+        "options": {}
+      },
+      "type": "n8n-nodes-base.httpRequest",
+      "typeVersion": 4.4,
+      "position": [
+        208,
+        0
+      ],
+      "id": "626382f7-cde4-444d-80be-ddefdb667603",
+      "name": "HTTP Request"
+    },
+    {
+      "parameters": {
+        "modelId": {
+          "__rl": true,
+          "value": "gpt-4o-mini",
+          "mode": "list",
+          "cachedResultName": "GPT-4O-MINI"
+        },
+        "responses": {
+          "values": [
+            {
+              "content": "=Analiza la siguiente noticia:\n\nTítulo: {{ $json.title }}\n\nContenido: {{ $json.body }}\n\nClasifica su sentimiento y categoría."
+            },
+            {
+              "role": "system",
+              "content": "Eres un modelo especializado en análisis de texto.\n\nTu tarea es clasificar noticias según:\n\n1. Sentimiento:\n- positivo\n- negativo\n- neutral\n\n2. Categoría:\n- tecnología\n- política\n- economía\n- deportes\n- ciencia\n- entretenimiento\n- otro\n\nReglas:\n- No inventes información\n- Basa tu respuesta SOLO en el texto\n- Sé objetivo\n- Responde en español\n\nFormato de salida:\n\nSentimiento: ...\nCategoría: ...\nExplicación: ..."
+            }
+          ]
+        },
+        "builtInTools": {},
+        "options": {}
+      },
+      "type": "@n8n/n8n-nodes-langchain.openAi",
+      "typeVersion": 2.1,
+      "position": [
+        400,
+        0
+      ],
+      "id": "929bab53-5250-409a-b115-6ab400516e85",
+      "name": "Message a model",
+      "credentials": {
+        "openAiApi": {
+          "id": "5GzthEmzW0zrjCZn",
+          "name": "n8n free OpenAI API credits"
+        }
+      }
+    },
+    {
+      "parameters": {},
+      "type": "n8n-nodes-base.noOp",
+      "typeVersion": 1,
+      "position": [
+        944,
+        0
+      ],
+      "id": "fc69caa8-d83e-4da7-85f7-47281d08f808",
+      "name": "No Operation, do nothing"
+    },
+    {
+      "parameters": {
+        "assignments": {
+          "assignments": [
+            {
+              "id": "1763d69f-e493-4629-92b1-db5efa285bf0",
+              "name": "resumen",
+              "value": "={{ $json.output[0].content[0].text }}",
+              "type": "string"
+            }
+          ]
+        },
+        "options": {}
+      },
+      "type": "n8n-nodes-base.set",
+      "typeVersion": 3.4,
+      "position": [
+        752,
+        0
+      ],
+      "id": "f2b28851-78ee-43f2-aa79-7957b2ef3a7c",
+      "name": "Edit Fields"
+    }
+  ],
+  "connections": {
+    "When clicking ‘Execute workflow’": {
+      "main": [
+        [
+          {
+            "node": "HTTP Request",
+            "type": "main",
+            "index": 0
+          }
+        ]
+      ]
+    },
+    "HTTP Request": {
+      "main": [
+        [
+          {
+            "node": "Message a model",
+            "type": "main",
+            "index": 0
+          }
+        ]
+      ]
+    },
+    "Message a model": {
+      "main": [
+        [
+          {
+            "node": "Edit Fields",
+            "type": "main",
+            "index": 0
+          }
+        ]
+      ]
+    },
+    "No Operation, do nothing": {
+      "main": [
+        []
+      ]
+    },
+    "Edit Fields": {
+      "main": [
+        [
+          {
+            "node": "No Operation, do nothing",
+            "type": "main",
+            "index": 0
+          }
+        ]
+      ]
+    }
+  },
+  "pinData": {},
+  "meta": {
+    "templateCredsSetupCompleted": true,
+    "instanceId": "e8fa43e9ff3b2d45481591194f99da422557d7548564644772dffe7b5e275411"
+  }
+}
