@@ -1,0 +1,482 @@
+{
+  "nodes": [
+    {
+      "parameters": {
+        "assignments": {
+          "assignments": [
+            {
+              "id": "785c7bc6-4499-4651-8a89-82a9b64ca1f8",
+              "name": "respuesta",
+              "value": "={{ $json.output[0].content[0].text }}",
+              "type": "object"
+            }
+          ]
+        },
+        "options": {}
+      },
+      "type": "n8n-nodes-base.set",
+      "typeVersion": 3.4,
+      "position": [
+        -352,
+        -144
+      ],
+      "id": "9f3ea2b6-faba-429e-b58f-787114c89023",
+      "name": "Edit Fields"
+    },
+    {
+      "parameters": {},
+      "type": "n8n-nodes-base.noOp",
+      "typeVersion": 1,
+      "position": [
+        544,
+        48
+      ],
+      "id": "1012be8f-ae74-499a-8058-f7f66d3d24a3",
+      "name": "No Operation, do nothing1"
+    },
+    {
+      "parameters": {},
+      "type": "n8n-nodes-base.noOp",
+      "typeVersion": 1,
+      "position": [
+        544,
+        -144
+      ],
+      "id": "71675b88-abe4-4aa0-b510-b7ce0d90ffb8",
+      "name": "No Operation, do nothing"
+    },
+    {
+      "parameters": {
+        "conditions": {
+          "options": {
+            "caseSensitive": true,
+            "leftValue": "",
+            "typeValidation": "strict",
+            "version": 3
+          },
+          "conditions": [
+            {
+              "id": "76c100a2-179f-495a-928f-604bb719ae0a",
+              "leftValue": "={{ $json.respuesta.decision }}",
+              "rightValue": "reportar",
+              "operator": {
+                "type": "string",
+                "operation": "equals"
+              }
+            },
+            {
+              "id": "33162734-74c6-418b-90dd-df35470a2063",
+              "leftValue": "={{ $json.respuesta.sentimiento }}",
+              "rightValue": "negativo",
+              "operator": {
+                "type": "string",
+                "operation": "equals"
+              }
+            }
+          ],
+          "combinator": "or"
+        },
+        "options": {}
+      },
+      "type": "n8n-nodes-base.if",
+      "typeVersion": 2.3,
+      "position": [
+        320,
+        -48
+      ],
+      "id": "90856f48-01d2-4102-b443-59c98aebbe0f",
+      "name": "If"
+    },
+    {
+      "parameters": {
+        "url": "=https://dummyjson.com/posts/{{ Math.floor(Math.random() * 150) + 1 }}",
+        "options": {}
+      },
+      "type": "n8n-nodes-base.httpRequest",
+      "typeVersion": 4.4,
+      "position": [
+        -1168,
+        -48
+      ],
+      "id": "8dfe71f8-5fed-47a1-a27b-085d8a7bfc7b",
+      "name": "HTTP Request"
+    },
+    {
+      "parameters": {
+        "modelId": {
+          "__rl": true,
+          "value": "gpt-4o-mini",
+          "mode": "list",
+          "cachedResultName": "GPT-4O-MINI"
+        },
+        "responses": {
+          "values": [
+            {
+              "content": "=Analiza la siguiente noticia y toma una decisión:\n\nTítulo: {{$json.title}}\n\nContenido: {{$json.body}}\n\nDetermina si debe ser reportada o ignorada según los criterios."
+            },
+            {
+              "role": "system",
+              "content": "Eres un sistema de toma de decisiones automatizado.\n\nTu tarea es analizar una noticia y decidir si debe ser reportada o ignorada.\n\nReglas:\n- SOLO responde en JSON válido\n- NO expliques fuera del JSON\n- Sé objetivo\n- Basa la decisión únicamente en el contenido\n\nCriterios:\n- Si el sentimiento es negativo → reportar\n- Si el contenido es crítico, violento o preocupante → reportar\n- En otros casos → ignorar\n\nFormato de salida:\n\n{\n  \"decision\": \"reportar\" o \"ignorar\",\n  \"sentimiento\": \"positivo\" | \"negativo\" | \"neutral\",\n  \"nivel_urgencia\": \"alto\" | \"medio\" | \"bajo\",\n  \"razon\": \"\"\n}"
+            }
+          ]
+        },
+        "builtInTools": {},
+        "options": {
+          "textFormat": {
+            "textOptions": {
+              "type": "json_object"
+            }
+          }
+        }
+      },
+      "type": "@n8n/n8n-nodes-langchain.openAi",
+      "typeVersion": 2.1,
+      "position": [
+        -720,
+        -144
+      ],
+      "id": "db3e592e-28a9-4620-b830-4cd501abe1cb",
+      "name": "Message a model",
+      "credentials": {
+        "openAiApi": {
+          "id": "5GzthEmzW0zrjCZn",
+          "name": "n8n free OpenAI API credits"
+        }
+      }
+    },
+    {
+      "parameters": {
+        "rule": {
+          "interval": [
+            {
+              "field": "minutes",
+              "minutesInterval": 1
+            }
+          ]
+        }
+      },
+      "type": "n8n-nodes-base.scheduleTrigger",
+      "typeVersion": 1.3,
+      "position": [
+        -1392,
+        -48
+      ],
+      "id": "7225e412-3682-460b-8829-88b6a0daf9e8",
+      "name": "Schedule Trigger"
+    },
+    {
+      "parameters": {
+        "conditions": {
+          "options": {
+            "caseSensitive": true,
+            "leftValue": "",
+            "typeValidation": "strict",
+            "version": 3
+          },
+          "conditions": [
+            {
+              "id": "92d6c9ce-bda4-4e4b-a5a5-e57d700689c1",
+              "leftValue": "={{ $json.reactions.likes }}",
+              "rightValue": "={{ $json.reactions.dislikes }}",
+              "operator": {
+                "type": "number",
+                "operation": "gt"
+              }
+            }
+          ],
+          "combinator": "and"
+        },
+        "options": {}
+      },
+      "type": "n8n-nodes-base.filter",
+      "typeVersion": 2.3,
+      "position": [
+        -944,
+        -48
+      ],
+      "id": "167d366c-055c-40e5-b25c-b23380233bca",
+      "name": "Filter"
+    },
+    {
+      "parameters": {
+        "operation": "append",
+        "documentId": {
+          "__rl": true,
+          "value": "1hcDetAeFbSQFs7BTvta0TVK5VqLtlIVOOzX1iBVXJpY",
+          "mode": "list",
+          "cachedResultName": "n8nnoticias",
+          "cachedResultUrl": "https://docs.google.com/spreadsheets/d/1hcDetAeFbSQFs7BTvta0TVK5VqLtlIVOOzX1iBVXJpY/edit?usp=drivesdk"
+        },
+        "sheetName": {
+          "__rl": true,
+          "value": "gid=0",
+          "mode": "list",
+          "cachedResultName": "Noticias Positivas",
+          "cachedResultUrl": "https://docs.google.com/spreadsheets/d/1hcDetAeFbSQFs7BTvta0TVK5VqLtlIVOOzX1iBVXJpY/edit#gid=0"
+        },
+        "columns": {
+          "mappingMode": "defineBelow",
+          "value": {
+            "Contenido": "={{ $json.body }}",
+            "Titulo": "={{ $json.title }}",
+            "Sentimiento": "={{ $json.respuesta.sentimiento }}"
+          },
+          "matchingColumns": [],
+          "schema": [
+            {
+              "id": "Titulo",
+              "displayName": "Titulo",
+              "required": false,
+              "defaultMatch": false,
+              "display": true,
+              "type": "string",
+              "canBeUsedToMatch": true
+            },
+            {
+              "id": "Contenido",
+              "displayName": "Contenido",
+              "required": false,
+              "defaultMatch": false,
+              "display": true,
+              "type": "string",
+              "canBeUsedToMatch": true
+            },
+            {
+              "id": "Sentimiento",
+              "displayName": "Sentimiento",
+              "required": false,
+              "defaultMatch": false,
+              "display": true,
+              "type": "string",
+              "canBeUsedToMatch": true
+            }
+          ],
+          "attemptToConvertTypes": false,
+          "convertFieldsToString": false
+        },
+        "options": {}
+      },
+      "type": "n8n-nodes-base.googleSheets",
+      "typeVersion": 4.7,
+      "position": [
+        768,
+        48
+      ],
+      "id": "fdc12e2f-490e-4856-ac17-2890e70eb332",
+      "name": "Append row in sheet",
+      "credentials": {
+        "googleSheetsOAuth2Api": {
+          "id": "NVcVADfOrLlS3GdF",
+          "name": "Google Sheets OAuth2 API"
+        }
+      }
+    },
+    {
+      "parameters": {
+        "operation": "append",
+        "documentId": {
+          "__rl": true,
+          "value": "1hcDetAeFbSQFs7BTvta0TVK5VqLtlIVOOzX1iBVXJpY",
+          "mode": "list",
+          "cachedResultName": "n8nnoticias",
+          "cachedResultUrl": "https://docs.google.com/spreadsheets/d/1hcDetAeFbSQFs7BTvta0TVK5VqLtlIVOOzX1iBVXJpY/edit?usp=drivesdk"
+        },
+        "sheetName": {
+          "__rl": true,
+          "value": 172208154,
+          "mode": "list",
+          "cachedResultName": "Noticias Negativas",
+          "cachedResultUrl": "https://docs.google.com/spreadsheets/d/1hcDetAeFbSQFs7BTvta0TVK5VqLtlIVOOzX1iBVXJpY/edit#gid=172208154"
+        },
+        "columns": {
+          "mappingMode": "defineBelow",
+          "value": {
+            "Sentimiento": "={{ $('Merge').item.json.respuesta.sentimiento }}",
+            "Titulo": "={{ $('Merge').item.json.title }}",
+            "Contenido": "={{ $('Merge').item.json.body }}"
+          },
+          "matchingColumns": [],
+          "schema": [
+            {
+              "id": "Titulo",
+              "displayName": "Titulo",
+              "required": false,
+              "defaultMatch": false,
+              "display": true,
+              "type": "string",
+              "canBeUsedToMatch": true
+            },
+            {
+              "id": "Contenido",
+              "displayName": "Contenido",
+              "required": false,
+              "defaultMatch": false,
+              "display": true,
+              "type": "string",
+              "canBeUsedToMatch": true
+            },
+            {
+              "id": "Sentimiento",
+              "displayName": "Sentimiento",
+              "required": false,
+              "defaultMatch": false,
+              "display": true,
+              "type": "string",
+              "canBeUsedToMatch": true
+            }
+          ],
+          "attemptToConvertTypes": false,
+          "convertFieldsToString": false
+        },
+        "options": {}
+      },
+      "type": "n8n-nodes-base.googleSheets",
+      "typeVersion": 4.7,
+      "position": [
+        768,
+        -144
+      ],
+      "id": "3c89ce50-e0b8-4a03-b656-753050460371",
+      "name": "Append row in sheet1",
+      "credentials": {
+        "googleSheetsOAuth2Api": {
+          "id": "NVcVADfOrLlS3GdF",
+          "name": "Google Sheets OAuth2 API"
+        }
+      }
+    },
+    {
+      "parameters": {
+        "mode": "combine",
+        "combineBy": "combineByPosition",
+        "options": {}
+      },
+      "type": "n8n-nodes-base.merge",
+      "typeVersion": 3.2,
+      "position": [
+        -144,
+        -48
+      ],
+      "id": "6fb5492a-1d21-43e9-a8ba-d04d5d875768",
+      "name": "Merge"
+    }
+  ],
+  "connections": {
+    "Edit Fields": {
+      "main": [
+        [
+          {
+            "node": "Merge",
+            "type": "main",
+            "index": 0
+          }
+        ]
+      ]
+    },
+    "No Operation, do nothing1": {
+      "main": [
+        [
+          {
+            "node": "Append row in sheet",
+            "type": "main",
+            "index": 0
+          }
+        ]
+      ]
+    },
+    "No Operation, do nothing": {
+      "main": [
+        [
+          {
+            "node": "Append row in sheet1",
+            "type": "main",
+            "index": 0
+          }
+        ]
+      ]
+    },
+    "If": {
+      "main": [
+        [
+          {
+            "node": "No Operation, do nothing",
+            "type": "main",
+            "index": 0
+          }
+        ],
+        [
+          {
+            "node": "No Operation, do nothing1",
+            "type": "main",
+            "index": 0
+          }
+        ]
+      ]
+    },
+    "HTTP Request": {
+      "main": [
+        [
+          {
+            "node": "Filter",
+            "type": "main",
+            "index": 0
+          }
+        ]
+      ]
+    },
+    "Message a model": {
+      "main": [
+        [
+          {
+            "node": "Edit Fields",
+            "type": "main",
+            "index": 0
+          }
+        ]
+      ]
+    },
+    "Schedule Trigger": {
+      "main": [
+        [
+          {
+            "node": "HTTP Request",
+            "type": "main",
+            "index": 0
+          }
+        ]
+      ]
+    },
+    "Filter": {
+      "main": [
+        [
+          {
+            "node": "Message a model",
+            "type": "main",
+            "index": 0
+          },
+          {
+            "node": "Merge",
+            "type": "main",
+            "index": 1
+          }
+        ]
+      ]
+    },
+    "Merge": {
+      "main": [
+        [
+          {
+            "node": "If",
+            "type": "main",
+            "index": 0
+          }
+        ]
+      ]
+    }
+  },
+  "pinData": {},
+  "meta": {
+    "templateCredsSetupCompleted": true,
+    "instanceId": "e8fa43e9ff3b2d45481591194f99da422557d7548564644772dffe7b5e275411"
+  }
+}
