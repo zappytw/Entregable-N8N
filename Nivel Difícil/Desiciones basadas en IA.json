@@ -1,0 +1,233 @@
+{
+    "nodes": [
+      {
+        "parameters": {
+          "modelId": {
+            "__rl": true,
+            "value": "gpt-4o-mini",
+            "mode": "list",
+            "cachedResultName": "GPT-4O-MINI"
+          },
+          "responses": {
+            "values": [
+              {
+                "content": "=Analiza la siguiente noticia y toma una decisión:\n\nTítulo: {{$json.title}}\n\nContenido: {{$json.body}}\n\nDetermina si debe ser reportada o ignorada según los criterios."
+              },
+              {
+                "role": "system",
+                "content": "Eres un sistema de toma de decisiones automatizado.\n\nTu tarea es analizar una noticia y decidir si debe ser reportada o ignorada.\n\nReglas:\n- SOLO responde en JSON válido\n- NO expliques fuera del JSON\n- Sé objetivo\n- Basa la decisión únicamente en el contenido\n\nCriterios:\n- Si el sentimiento es negativo → reportar\n- Si el contenido es crítico, violento o preocupante → reportar\n- En otros casos → ignorar\n\nFormato de salida:\n\n{\n  \"decision\": \"reportar\" o \"ignorar\",\n  \"sentimiento\": \"positivo\" | \"negativo\" | \"neutral\",\n  \"nivel_urgencia\": \"alto\" | \"medio\" | \"bajo\",\n  \"razon\": \"\"\n}"
+              }
+            ]
+          },
+          "builtInTools": {},
+          "options": {
+            "textFormat": {
+              "textOptions": {
+                "type": "json_object"
+              }
+            }
+          }
+        },
+        "type": "@n8n/n8n-nodes-langchain.openAi",
+        "typeVersion": 2.1,
+        "position": [
+          400,
+          0
+        ],
+        "id": "929bab53-5250-409a-b115-6ab400516e85",
+        "name": "Message a model",
+        "credentials": {
+          "openAiApi": {
+            "id": "5GzthEmzW0zrjCZn",
+            "name": "n8n free OpenAI API credits"
+          }
+        }
+      },
+      {
+        "parameters": {
+          "url": "=https://dummyjson.com/posts/{{ Math.floor(Math.random() * 150) + 1 }}",
+          "options": {}
+        },
+        "type": "n8n-nodes-base.httpRequest",
+        "typeVersion": 4.4,
+        "position": [
+          208,
+          0
+        ],
+        "id": "626382f7-cde4-444d-80be-ddefdb667603",
+        "name": "HTTP Request"
+      },
+      {
+        "parameters": {},
+        "type": "n8n-nodes-base.manualTrigger",
+        "typeVersion": 1,
+        "position": [
+          0,
+          0
+        ],
+        "id": "ec84c15d-24e0-4991-bc38-5451943018f4",
+        "name": "When clicking ‘Execute workflow’"
+      },
+      {
+        "parameters": {
+          "conditions": {
+            "options": {
+              "caseSensitive": true,
+              "leftValue": "",
+              "typeValidation": "strict",
+              "version": 3
+            },
+            "conditions": [
+              {
+                "id": "76c100a2-179f-495a-928f-604bb719ae0a",
+                "leftValue": "={{ $json.respuesta.decision }}",
+                "rightValue": "reportar",
+                "operator": {
+                  "type": "string",
+                  "operation": "equals"
+                }
+              },
+              {
+                "id": "33162734-74c6-418b-90dd-df35470a2063",
+                "leftValue": "={{ $json.respuesta.sentimiento }}",
+                "rightValue": "negativo",
+                "operator": {
+                  "type": "string",
+                  "operation": "equals"
+                }
+              }
+            ],
+            "combinator": "or"
+          },
+          "options": {}
+        },
+        "type": "n8n-nodes-base.if",
+        "typeVersion": 2.3,
+        "position": [
+          928,
+          0
+        ],
+        "id": "ec645b68-fdd0-44a4-a77a-725be3d9d1c8",
+        "name": "If"
+      },
+      {
+        "parameters": {},
+        "type": "n8n-nodes-base.noOp",
+        "typeVersion": 1,
+        "position": [
+          1136,
+          -144
+        ],
+        "id": "8e6e6491-0152-4afc-a633-8354b091afcb",
+        "name": "No Operation, do nothing"
+      },
+      {
+        "parameters": {},
+        "type": "n8n-nodes-base.noOp",
+        "typeVersion": 1,
+        "position": [
+          1136,
+          128
+        ],
+        "id": "f47ff479-5c69-41b8-a9b6-b97ba2982bac",
+        "name": "No Operation, do nothing1"
+      },
+      {
+        "parameters": {
+          "assignments": {
+            "assignments": [
+              {
+                "id": "785c7bc6-4499-4651-8a89-82a9b64ca1f8",
+                "name": "respuesta",
+                "value": "={{ $json.output[0].content[0].text }}",
+                "type": "object"
+              }
+            ]
+          },
+          "options": {}
+        },
+        "type": "n8n-nodes-base.set",
+        "typeVersion": 3.4,
+        "position": [
+          720,
+          0
+        ],
+        "id": "e27373b9-9c1d-4ad6-9fe2-748cb18ca0f8",
+        "name": "Edit Fields"
+      }
+    ],
+    "connections": {
+      "Message a model": {
+        "main": [
+          [
+            {
+              "node": "Edit Fields",
+              "type": "main",
+              "index": 0
+            }
+          ]
+        ]
+      },
+      "HTTP Request": {
+        "main": [
+          [
+            {
+              "node": "Message a model",
+              "type": "main",
+              "index": 0
+            }
+          ]
+        ]
+      },
+      "When clicking ‘Execute workflow’": {
+        "main": [
+          [
+            {
+              "node": "HTTP Request",
+              "type": "main",
+              "index": 0
+            }
+          ]
+        ]
+      },
+      "If": {
+        "main": [
+          [
+            {
+              "node": "No Operation, do nothing",
+              "type": "main",
+              "index": 0
+            }
+          ],
+          [
+            {
+              "node": "No Operation, do nothing1",
+              "type": "main",
+              "index": 0
+            }
+          ]
+        ]
+      },
+      "No Operation, do nothing1": {
+        "main": [
+          []
+        ]
+      },
+      "Edit Fields": {
+        "main": [
+          [
+            {
+              "node": "If",
+              "type": "main",
+              "index": 0
+            }
+          ]
+        ]
+      }
+    },
+    "pinData": {},
+    "meta": {
+      "templateCredsSetupCompleted": true,
+      "instanceId": "e8fa43e9ff3b2d45481591194f99da422557d7548564644772dffe7b5e275411"
+    }
+  }
